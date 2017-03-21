@@ -1,0 +1,98 @@
+    * {
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
+        font-size: 14px;
+    }
+
+    :required {
+        border-color: #88a;
+        -webkit-box-shadow: 0 0 5px rgba(0, 0, 255, .5);
+        -moz-box-shadow: 0 0 5px rgba(0, 0, 255, .5);
+        -o-box-shadow: 0 0 5px rgba(0, 0, 255, .5);
+        -ms-box-shadow: 0 0 5px rgba(0, 0, 255, .5);
+        box-shadow: 0 0 5px rgba(0, 0, 255, .5);
+    }
+
+    .container {
+        width: 60%;
+        height: 100%;
+        margin: 0 auto;
+        margin-top: 30px;
+    }
+
+    section {
+        margin-left: : 2em 0;
+        overflow: hidden;
+    }
+
+    section h2 {
+        font-size: 2em;
+        display: block;
+        padding-bottom: .5em;
+        border-bottom: 1px solid #ccc;
+        margin-bottom: .5em;
+    }
+
+    table {
+        width: 100%;
+        margin-bottom: .5em;
+        table-layout: fixed;
+    }
+
+    td, th {
+        padding: .7em;
+        margin: 0;
+        border: 1px solid #ccc;
+        text-align: center;
+    }
+
+    th {
+        font-weight: bold;
+        background-color: #EEE;
+    }
+
+    label {
+        color: #555;
+        display: block;
+        margin-bottom: .2em;
+    }
+
+    .campo {
+        margin: 0;
+        padding-bottom: 1em;
+        width: 100%;
+        border: 1px solid #ccc;
+        padding: .7em;
+    }
+
+    .campo-medio {
+        display: inline-block;
+        padding-right: .5em;
+    }
+
+    .grupo {
+        width: 32%;
+        display: inline-block;
+        padding: 10px 0px;
+    }
+
+    #buscaPedido {
+        margin: 0;
+        padding-bottom: 1em;
+        border: 1px solid #ccc;
+        padding: .7em;
+    }
+    
+    button {
+        padding: 7px;
+        border: 0;
+        border-bottom: 3px solid;
+        font-size: 1.2em;
+        cursor: pointer;
+        color: #fff;
+        background-color: #39bb9d;
+        border-color: #197c65;
+    }
