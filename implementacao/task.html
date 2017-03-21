@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>Task</title>
+	<link rel="stylesheet" type="text/css" href="css/task.css" />
+	<link rel="stylesheet" type="text/css" href="css/menu.css" />
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+	<script src="js/mysql_lib.js"></script>
+	<script src="js/consultaCEP.js"></script>
+</head>
+<body>
+
+	<div class="menu">
+        <ul>
+            <li><img src="imagens/pessoas.png" height="25" width="35"><a href="#">Tarefa</a></li>
+            <li><a href="#">Check if extra insurance is necessary</a></li>
+        </ul>
+    </div>
+	
+	<section class="container">
+	<input type="text" name="buscaPedido" id="buscaPedido" placeholder="Número Pedido">
+	<button id="search">Buscar</button>
+		
+	<script>
+		var numPedido = $("#buscaPedido");
+		numPedido.focusout( function(){
+			console.log(numPedido.val());
+		});
+	</script>
+	</section>
+
+	<!----Dados do Pedido ---->
+	<section class="container">
+	<h2>Dados do Pedido</h2>
+	<table>
+		<thead>
+			<tr>
+				<th>Material</th>
+				<th>Marca</th>
+				<th>Data da Compra</th>
+				<th>Qtd Material</th>
+			</tr>
+		</thead>
+		<tbody id="conteudoPedido"></tbody>
+	</table>
+
+	<script>
+
+		window.onload = function(){
+			
+			var query_pedido = "select a.id, b.id, b.marca, a.data_de_compra, b.quantidade, sum(select b.preco from materiais where id_pedido ="+numPedido+") from pedidos a inner join materiais b on a.id = b.id_pedido where a.id = "+numPedido+" order by b.id";
+
+		  	mysqlQuery(query_pedido, function(result){
+		    	// mostra o resultado da query
+		    	var pedido = JSON.parse(result);
+		    	var table_body =  document.getElementById("conteudoPedido");
+		    	console.log(pedido);
+			    pedido.forEach(function(el){
+			    	var html_body = "<tr>"+
+			    						"<td>"+el.nome+"</td>"+
+										"<td>"+el.marca+"</td>"+
+										"<td>"+el.data_de_compra+"</td>"+
+										"<td>"+el.quantidade+"</td>"+
+									"</tr>";
+					table_body.innerHTML += html_body;
+			    });
+
+		  	});
+		};
+	</script>
+	</section>
+	<!----Fim Pedido ---->
+
+
+		<!----Dados do Insumo ---->
+		<section class="container">
+		<h2>Dados do Insumo</h2>
+		<table>
+		<thead>
+			<tr>
+				<th>Marca</th>
+				<th>Descrição</th>
+				<th>Quantidade</th>
+				<th>Preço</th>
+			</tr>
+		</thead>
+		<tbody id="conteudoInsumo"></tbody>
+	</table>
+
+		<script>
+		
+		window.onload = function(){
+
+			var query_insumo = "select material.marca, insumos.descricao, insumos.quantidade,insumos.preço from insumos inner join material on insumos.id_material = material.id inner join pedidos on insumos.id_pedido = pedidos.id where pedidos.id = "+numPedido+"";
+
+
+		  	mysqlQuery(query_insumo, function(result){
+		    	// mostra o resultado da query
+		    	var insumo = JSON.parse(result);
+		    	var table_body =  document.getElementById("conteudoPedido");
+		    	console.log(insumo);
+			    insumo.forEach(function(el){
+			    	var html_body = "<tr>"+
+			    						"<td>"+el.marca+"</td>"+
+										"<td>"+el.descricao+"</td>"+
+										"<td>"+el.quantidade+"</td>"+
+										"<td>"+el.preco+"</td>"+
+									"</tr>";
+					table_body.innerHTML += html_body;
+			    });
+
+		  	});
+		};
+	</script>
+
+	</section>
+	<!----Fim Insumo ---->
+
+	<!----Dados do Solicitante ---->
+	<section class="container">
+		<script>
+		window.onload = function(){
+
+			var mysql_query = "SELECT a.nome, a.telefone, a.cpf, a.cep FROM solicitantes a INNER JOIN pedidos b ON a.id = b.id_solicitante WHERE b.id = "+numPedido+"";
+
+		  	mysqlQuery(mysql_query, function(result){
+		    	// mostra o resultado da query
+		    	var obj = JSON.parse(result);
+		    	console.log(obj);
+		    	obj.forEach(function(el){
+
+				var full_name = document.getElementById('full_name');
+				full_name.value = el.nome;
+
+				var telefone = document.getElementById('telefone');
+				telefone.value = el.telefone; 
+
+				var cpf = document.getElementById('cpf');
+				cpf.value = el.cpf;
+
+				var cep = document.getElementById('cep');
+				cep.value = el.cep;
+			    });
+
+		  	});
+		};
+	</script>
+
+	<h2>Dados do Solicitante</h2>
+		<form method="get" action=".">
+				<label for="nome">Nome Completo:</label>
+				<input type="text" id="full_name" name="full_name" placeholder="Digite seu nome" class="campo" required>
+
+			<div class="grupo">
+    			<label for="telefone">Telefone:</label>
+   				 <input type="text" id="telefone" name="telefone" placeholder="(00)0000-0000" class="campo campo-medio" required>
+			</div>
+
+			<div class="grupo">
+    			<label for="cpf">CPF:</label>
+    			<input type="text" id="cpf" name="cpf" placeholder="Digite seu CPF" class="campo campo-medio" required>
+			</div>
+
+			<div class="grupo">
+    			<label for="cep">CEP:</label>
+    			<input type="text" id="cep" name="cep" placeholder="Digite seu cep" class="campo campo-medio" required>
+			</div>
+
+			<div class="grupo">
+    			<label for="endereco">Endereço:</label>
+    			<input type="text" id="endereco" name="endereco" class="campo campo-medio" required>
+			</div>
+
+			<div class="grupo">
+    			<label for="complemento">Complemento:</label>
+    			<input type="text" id="complemento" name="complemento" class="campo campo-medio" >
+			</div>
+
+			<div class="grupo">
+    			<label for="estado">Estado:</label>
+    			<input type="text" id="estado" name="estado" class="campo campo-medio" required>
+			</div>
+
+			<div class="grupo">
+    			<label for="cidade">Cidade:</label>
+				<input type="text" id="cidade" name="cidade" class="campo campo-medio" required>
+			</div>
+
+	</section>
+	<!----Fim Solicitante---->
+
+	<section class="container">
+	<h2>Dados da Entrega</h2>
+			<div class="grupo">
+    			<label for="cep">CEP:</label>
+    			<input type="text" id="cep" name="cep" placeholder="Digite seu cep" class="campo campo-medio" required>
+			</div>
+			
+			<div class="grupo">
+				<label for="endereco">Endereço:</label>
+    			<input type="text" id="endereco" name="endereco" class="campo campo-medio" required>
+			</div>
+
+			<div class="grupo">
+   				<label for="complemento">Complemento:</label>
+   				<input type="text" id="complemento" name="complemento" class="campo campo-medio" >
+			</div>
+
+			<div class="grupo">
+    			<label for="estado">Estado:</label>
+    			<input type="text" id="estado" name="estado" class="campo campo-medio" required>
+			</div>
+
+			<div class="grupo">
+    			<label for="cidade">Cidade:</label>
+    			<input type="text" id="cidade" name="cidade" class="campo campo-medio" required>
+			</div>
+			
+			<h2>Preço Total:</h2>
+
+			<button id="enviar">Enviar Pedido</button>
+		</form>
+
+	</section>
+</body>
+</html>
